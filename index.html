@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Random Drink Selector</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    p {
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    
+    #drink {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #007bff;
+      min-height: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    button:active {
+      transform: translateY(1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chọn đồ uống</h1>
+    <p>Bấm nút để chọn đồ uống!</p>
+    <p id="drink"></p>
+    <button id="btn">Bấm ngay</button>
+  </div>
+  <script>
+    // random a drink from the array
+    const drinks = [
+      "Milo",
+      "Matcha",
+      "Soda",
+      "Cacao",
+      "Vitamin",
+      "Trà sữa",
+      "Cà phê",
+      "Trà",
+      "Matcha gói",
+      "Cà phê trứng",
+      "Nước lọc",
+      "Sinh tố",
+      "Sữa",
+      "Trà hoa quả",
+      "Sữa chua đánh đá"
+    ];
+    const btn = document.getElementById("btn");
+    const drink = document.getElementById("drink");
+    btn.addEventListener("click", () => {
+      const randomIndex = Math.floor(Math.random() * drinks.length);
+      drink.textContent = drinks[randomIndex];
+    });
+  </script>
+</body>
+</html>
