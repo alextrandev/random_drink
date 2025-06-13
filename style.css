@@ -66,7 +66,7 @@ button:active {
 .slider-container {
   width: 100%;
   overflow: hidden;
-  padding: 0 100px; /* show half-slide at ends */
+  padding: 0 100px; /* show half slide at each end */
 }
 
 #slider {
@@ -75,18 +75,13 @@ button:active {
 }
 
 .slide {
-  flex: 0 0 200px;
+  flex: 0 0 200px; /* fixed width for slides */
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
   background: #f1f1f1;
   border-right: 1px solid #ddd;
-}
-
-.slide.active {
-  background: #007bff;
-  color: #fff;
 }
 
 .marker {

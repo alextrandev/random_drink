@@ -20,7 +20,8 @@ const drinks = [
     
     // slider setup: duplicate sets for seamless carousel
     const slider = document.getElementById("slider");
-    const sets = 10;
+    const sets = 7; // loops*2+1 ensures enough slides for spin
+    slides = [];
     for (let s = 0; s < sets; s++) {
       drinks.forEach(name => {
         const div = document.createElement("div");
@@ -29,41 +30,53 @@ const drinks = [
         slider.appendChild(div);
       });
     }
-    const slides = slider.querySelectorAll('.slide');
+    const slideElems = slider.querySelectorAll('.slide');
     const container = document.querySelector('.slider-container');
-    const slideWidth = container.clientWidth / 3; // three full slides visible
-    // initial center offset (middle set)
-    const initialOffset = slideWidth * drinks.length * Math.floor(sets / 2);
+
+    // compute dimensions
+    const slideWidth = slideElems[0].clientWidth;
+    const centerOffset = container.clientWidth / 2 - slideWidth / 2;
+    // apply padding to container for partial slides
+    container.style.paddingLeft = `${centerOffset}px`;
+    container.style.paddingRight = `${centerOffset}px`;
+
+    // initial offset: center the middle set
+    const totalSlides = drinks.length * sets;
+    const startIndex = drinks.length * Math.floor(sets / 2);
+    const initialOffset = startIndex * slideWidth;
+    slider.style.transition = 'none';
     slider.style.transform = `translateX(-${initialOffset}px)`;
 
-    // remove old click handler
-    btn.replaceWith(btn.cloneNode(true));
-    const newBtn = document.getElementById('btn');
-    newBtn.addEventListener('click', async () => {
-      newBtn.disabled = true;
+    // click handler
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
       drink.textContent = '';
-      // reset position instantly
+      // reset to center instantly
       slider.style.transition = 'none';
       slider.style.transform = `translateX(-${initialOffset}px)`;
-      // force reflow
       void slider.offsetWidth;
-      // compute dimensions
-      const slideWidth = slides[0].clientWidth;
-      // random final index and total steps
+      // pick random index and compute final position
       const finalIdx = Math.floor(Math.random() * drinks.length);
-      const totalSteps = drinks.length * 3 + finalIdx;
-      const startOffset = initialOffset;
-      const endOffset = startOffset + totalSteps * slideWidth;
-      // calculate center position offset
-      const centerOffset = (container.clientWidth - slideWidth) / 2;
-      // final translate ensures chosen slide lands in center
-      const finalTranslate = endOffset - centerOffset;
-      // animate with single smooth transition
-      slider.style.transition = 'transform 3s cubic-bezier(0.33, 1, 0.68, 1)';
-      slider.style.transform = `translateX(-${finalTranslate}px)`;
-      // wait for animation to finish
-      await new Promise(res => setTimeout(res, 3000));
-      // show chosen
-      drink.textContent = drinks[finalIdx];
-      newBtn.disabled = false;
+      const loops = 3;
+      const targetIndex = startIndex + loops * drinks.length + finalIdx;
+      const finalTranslate = targetIndex * slideWidth;
+      // add random offset within slide to shift marker randomly inside it
+      const randomOffset = (Math.random() - 0.5) * slideWidth * 0.6; // ±30% of slide width
+      const finalPos = finalTranslate - randomOffset;
+
+      // animate with acceleration then deceleration
+      slider.style.transition = 'transform 3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+      slider.style.transform = `translateX(-${finalPos}px)`;
+      // wait for animation to end
+      await new Promise(res => slider.addEventListener('transitionend', res, { once: true }));
+      // detect slide under center marker
+      const containerRect = container.getBoundingClientRect();
+      const markerX = containerRect.left + containerRect.width / 2;
+      let selected = '';
+      slideElems.forEach(sl => {
+        const rect = sl.getBoundingClientRect();
+        if (markerX >= rect.left && markerX <= rect.right) selected = sl.textContent;
+      });
+      drink.textContent = selected;
+      btn.disabled = false;
     });
