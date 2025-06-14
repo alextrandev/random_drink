@@ -11,7 +11,7 @@ const drinks = [
       "Cà phê trứng",
       "Nước lọc",
       "Sinh tố",
-      "Sữa",
+      "Sữa tươi trân châu",
       "Trà hoa quả",
       "Sữa chua đánh đá"
     ];
@@ -50,7 +50,7 @@ const drinks = [
     // click handler
     btn.addEventListener('click', async () => {
       btn.disabled = true;
-      drink.textContent = '';
+      drink.textContent = '???';
       // reset to center instantly
       slider.style.transition = 'none';
       slider.style.transform = `translateX(-${initialOffset}px)`;
