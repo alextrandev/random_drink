@@ -49,6 +49,8 @@ const drinks = [
 
     // click handler
     btn.addEventListener('click', async () => {
+      // remove ongoing pop effect if any
+      drink.classList.remove('pop');
       btn.disabled = true;
       drink.textContent = '???';
       // reset to center instantly
@@ -78,5 +80,29 @@ const drinks = [
         if (markerX >= rect.left && markerX <= rect.right) selected = sl.textContent;
       });
       drink.textContent = selected;
+      // pop animation: re-trigger by removing and adding class
+      drink.classList.remove('pop');
+      void drink.offsetWidth;
+      drink.classList.add('pop');
+      // initial confetti bursts
+      const bursts = 5;
+      for (let i = 0; i < bursts; i++) {
+        confetti({
+          particleCount: 150,
+          spread: 360,
+          startVelocity: 60,
+          origin: { x: Math.random(), y: Math.random() * 0.8 }
+        });
+      }
+      // continuous confetti every 0.25s for 5 seconds
+      const confettiInterval = setInterval(() => {
+        confetti({
+          particleCount: 50,
+          spread: 360,
+          startVelocity: 40,
+          origin: { x: Math.random(), y: Math.random() }
+        });
+      }, 250);
+      setTimeout(() => clearInterval(confettiInterval), 5000);
       btn.disabled = false;
     });

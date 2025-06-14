@@ -45,11 +45,32 @@ p {
 }
 
 #drink {
+  display: inline-block; /* allow transform */
   font-size: 1.5rem;
   font-weight: 500;
   color: #a65f46; /* warm terracotta */
   min-height: 1.5rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#drink.pop {
+  animation: pop 5s linear forwards; /* linear for consistent timing */
+}
+
+@keyframes pop {
+  0%   { transform: scale(1);   color: #a65f46; }
+  5%   { transform: scale(3);   color: #a65f46; }
+  15%  { transform: scale(3);   color: #e63946; }
+  25%  { transform: scale(3);   color: #f1fa3c; }
+  35%  { transform: scale(3);   color: #3cf153; }
+  45%  { transform: scale(3);   color: #3c6df1; }
+  55%  { transform: scale(3);   color: #e63946; }
+  65%  { transform: scale(3);   color: #f1fa3c; }
+  75%  { transform: scale(3);   color: #3cf153; }
+  85%  { transform: scale(3);   color: #3c6df1; }
+  95%  { transform: scale(3);   color: #e63946; }
+  100% { transform: scale(3);   color: #a65f46; }
 }
 
 button {
