@@ -210,37 +210,37 @@ button:disabled:active {
 /* mobile responsive design */
 @media (max-width: 768px) {
   .container {
-    max-width: 95%;
-    padding: 1.5rem;
+    max-width: 98%;
+    padding: 2rem 1rem;
     gap: 1rem;
   }
   
   h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   p {
-    font-size: 1rem;
-  }
-  
-  #drink {
     font-size: 1.25rem;
   }
   
+  #drink {
+    font-size: 1.75rem;
+  }
+  
   .slider-container {
-    padding: 0 50px;
+    padding: 0 30px;
     margin: 1.5rem 0;
   }
   
   .slide {
     flex: 0 0 150px;
     padding: 0.75rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
   button {
     padding: 0.75rem 2rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
   
   .marker {
@@ -250,32 +250,37 @@ button:disabled:active {
     scale: 1.2;
   }
 }
-
+ 
 @media (max-width: 480px) {
-  .container {
-    padding: 1rem;
+   .container {
+    max-width: 100%;
+    padding: 2.5rem 0.5rem;
+   }
+   
+   h1 {
+    font-size: 2.25rem;
+   }
+  
+  p {
+    font-size: 1.125rem;
   }
   
-  h1 {
-    font-size: 1.75rem;
+  #drink {
+    font-size: 1.5rem;
   }
-  
-  .slider-container {
-    padding: 0 30px;
-  }
-  
-  .slide {
-    flex: 0 0 120px;
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
-  
-  button {
-    padding: 0.5rem 1.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .marker {
-    scale: 1;
-  }
-}
+   
+   .slider-container {
+    padding: 0 20px;
+   }
+   
+   .slide {
+     flex: 0 0 120px;
+     padding: 0.5rem;
+     font-size: 0.9rem;
+   }
+   
+   button {
+     padding: 0.5rem 1.5rem;
+     font-size: 1.125rem;
+   }
+ }
