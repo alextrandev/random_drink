@@ -87,18 +87,35 @@ button {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
+button:disabled {
+  background: #6b4d41;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
 button:hover {
   background: #8a4b3a;
+}
+
+button:disabled:hover {
+  background: #6b4d41;
 }
 
 button:active {
   transform: translateY(2px);
 }
 
+button:disabled:active {
+  transform: none;
+}
+
 /* slider gallery */
 .slider-container {
-  width: 100%;
+  /* ensure marker visible */
   overflow: hidden;
+  position: relative;
+  width: 100%;
   padding: 0 100px; /* show half slide at each end */
   margin: 2rem 0;
   border: 4px solid #8a4b3a; /* rustic wood frame */
@@ -126,14 +143,66 @@ button:active {
   color: #fffaf0;
 }
 
+/* replace marker line indicator with a needle pointer */
 .marker {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: #8a4b3a; /* darker marker */
+  /* fancy red needle with gradient and shadow */
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 35px solid #dc2626; /* red color */
+  bottom: -5px;
   left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
+  z-index: 10;
+  scale: 1.2;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transform-origin: center bottom;
+}
+
+.marker::before {
+  content: '';
+  position: absolute;
+  bottom: -35px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 30px solid #991b1b; /* darker red */
+}
+
+.marker::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 20px solid #ef4444; /* bright red highlight */
+}
+
+/* bump animation for the needle */
+.marker.bump {
+  animation: bump 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.marker.stuck-left {
+  animation: stick-left 0.1s ease-out forwards;
+}
+
+@keyframes bump {
+  0%   { transform: translateX(-50%) rotate(0deg); transform-origin: center bottom; }
+  50%  { transform: translateX(-50%) rotate(-30deg); transform-origin: center bottom; }
+  100% { transform: translateX(-50%) rotate(0deg); transform-origin: center bottom; }
+}
+
+@keyframes stick-left {
+  0%   { transform: translateX(-50%) rotate(0deg); }
+  100% { transform: translateX(-50%) rotate(-30deg); }
 }
 /* end slider gallery */

@@ -32,6 +32,7 @@ const drinks = [
     }
     const slideElems = slider.querySelectorAll('.slide');
     const container = document.querySelector('.slider-container');
+    const marker = document.querySelector('.marker');
 
     // compute dimensions
     const slideWidth = slideElems[0].clientWidth;
@@ -51,6 +52,11 @@ const drinks = [
     btn.addEventListener('click', async () => {
       // remove ongoing pop effect if any
       drink.classList.remove('pop');
+      // stop any ongoing confetti
+      if (window.confettiInterval) {
+        clearInterval(window.confettiInterval);
+        window.confettiInterval = null;
+      }
       btn.disabled = true;
       drink.textContent = '???';
       // reset to center instantly
@@ -67,9 +73,50 @@ const drinks = [
       const finalPos = finalTranslate - randomOffset;
 
       // animate with acceleration then deceleration
-      slider.style.transition = 'transform 3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+      slider.style.transition = 'transform 4s cubic-bezier(0.4, 0.0, 0.1, 1)';
       slider.style.transform = `translateX(-${finalPos}px)`;
-      // wait for animation to end
+      // detect bump: poll slider transform and detect slide index changes
+      let done = false;
+      const onEnd = () => { done = true; };
+      slider.addEventListener('transitionend', onEnd, { once: true });
+      let prevIndex = startIndex;
+      let startTime = Date.now();
+      let isStuckLeft = false;
+      function poll() {
+        const style = window.getComputedStyle(slider);
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        const currentOffset = -matrix.m41;
+        const currentIndex = Math.round(currentOffset / slideWidth);
+        const now = Date.now();
+        const timeElapsed = now - startTime;
+        const speed = Math.abs(currentIndex - prevIndex);
+        
+        if (currentIndex !== prevIndex) {
+          prevIndex = currentIndex;
+          
+          // if spinning fast in first 1.5s, stick left
+          if (timeElapsed < 2000 && speed > 0) {
+            if (!isStuckLeft) {
+              marker.classList.remove('bump');
+              marker.classList.add('stuck-left');
+              isStuckLeft = true;
+            }
+          } else {
+            // normal bumping when slower
+            if (isStuckLeft) {
+              marker.classList.remove('stuck-left');
+              isStuckLeft = false;
+            }
+            // quick bump and bounce back for final slow movements
+            marker.classList.remove('bump');
+            marker.classList.add('bump');
+            setTimeout(() => marker.classList.remove('bump'), 300);
+         }
+        }
+        if (!done) requestAnimationFrame(poll);
+      }
+      poll();
+      // wait for animation end
       await new Promise(res => slider.addEventListener('transitionend', res, { once: true }));
       // detect slide under center marker
       const containerRect = container.getBoundingClientRect();
@@ -95,7 +142,7 @@ const drinks = [
         });
       }
       // continuous confetti every 0.25s for 5 seconds
-      const confettiInterval = setInterval(() => {
+      window.confettiInterval = setInterval(() => {
         confetti({
           particleCount: 50,
           spread: 360,
@@ -103,6 +150,11 @@ const drinks = [
           origin: { x: Math.random(), y: Math.random() }
         });
       }, 250);
-      setTimeout(() => clearInterval(confettiInterval), 5000);
+      setTimeout(() => {
+        if (window.confettiInterval) {
+          clearInterval(window.confettiInterval);
+          window.confettiInterval = null;
+        }
+      }, 5000);
       btn.disabled = false;
     });
